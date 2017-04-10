@@ -12,6 +12,7 @@ macro(sfml_add_library target)
 
     # create the target
     add_library(${target} ${THIS_SOURCES})
+    target_include_directories(${target} INTERFACE ${PROJECT_SOURCE_DIR}/include) 
 
     # define the export symbol of the module
     string(REPLACE "-" "_" NAME_UPPER "${target}")
@@ -34,6 +35,7 @@ macro(sfml_add_library target)
             set_target_properties(${target} PROPERTIES IMPORT_SUFFIX ".a")
         endif()
     else()
+        target_compile_definitions(${target} INTERFACE SFML_STATIC)
         set_target_properties(${target} PROPERTIES DEBUG_POSTFIX -s-d)
         set_target_properties(${target} PROPERTIES RELEASE_POSTFIX -s)
         set_target_properties(${target} PROPERTIES MINSIZEREL_POSTFIX -s)
@@ -62,7 +64,7 @@ macro(sfml_add_library target)
     # For Visual Studio on Windows, export debug symbols (PDB files) to lib directory
     if(SFML_GENERATE_PDB)
         # PDB files are only generated in Debug and RelWithDebInfo configurations, find out which one
-        if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             set(SFML_PDB_POSTFIX "-d")
         else()
             set(SFML_PDB_POSTFIX "")
