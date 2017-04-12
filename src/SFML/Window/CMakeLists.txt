@@ -252,3 +252,9 @@ sfml_add_library(sfml-window
                  SOURCES ${SRC} ${PLATFORM_SRC}
                  DEPENDS sfml-system
                  EXTERNAL_LIBS ${WINDOW_EXT_LIBS})
+
+# those who link aginst the sfml-window as a static library on macOS require the -ObjC flag
+# See https://developer.apple.com/library/content/qa/qa1490/_index.html
+if(SFML_OS_MACOSX AND NOT BUILD_SHARED_LIBS)
+    target_link_libraries(sfml-window "-ObjC")
+endif()
